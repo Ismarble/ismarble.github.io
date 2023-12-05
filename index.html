@@ -1,1 +1,163 @@
-<h1>glellow</h1>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <header>
+        <div id="header">
+            <h1>LSHS Tools - - Schedule</h1>
+            <div class="dropdown">
+                <button class="dropbtn">Lunch</button>
+                <div class="dropdown-content">
+                    <a href="./Lunch-Shifts.html">Normal</a>
+                    <a href="./Friday-Lunch-Shifts.html">Friday</a>
+                    <a href="./Assembly-Lunch-Shifts.html">Assembly</a>
+
+                </div>
+            </div>
+        </div>
+        <div id="buttons">
+            <button onclick="location.href='./Schedule.html'"><b>Auto Schedule</b></button>
+            <button onclick="location.href='./Schedule-Manual-Normal.html'">Schedule Schedule</button>
+            <button onclick="location.href='./Schedule-Manual-Friday.html'">Friday Schedule</button>
+            <button onclick="location.href='./bor/Mor.html'">More</button>            
+        </div>
+        <br>
+        <div id="display"></div>
+    </header>
+    <style>
+                body {
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            background-color: #555;
+            padding: 15px;
+            color: #fff;
+            text-align: center;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+    <title>LSHS Auto Schedule</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var currentDate = new Date();
+            var dayOfWeek = currentDate.getDay();
+            var currentHour = currentDate.getHours();
+            var currentMinute = currentDate.getMinutes();
+
+            function addMinutes(date, minutes) {
+                return new Date(date.getTime() + minutes * 60000);
+            }
+
+            function formatTime(date) {
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                return hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+            }
+
+            var displayElement = document.getElementById('display');
+
+            if (dayOfWeek === 5) {
+                displayElement.innerHTML = '<div>Friday</div>';
+                showSchedule([
+                    {start: '08:25', end: '09:06', name: '1st Hour'},
+                    {start: '09:12', end: '09:53', name: '2nd Hour'},
+                    {start: '09:59', end: '10:40', name: '3rd Hour'},
+                    {start: '10:46', end: '11:27', name: '4th Hour'},
+                    {start: '11:33', end: '12:46', name: '5th Hour'},
+                    {start: '12:52', end: '13:32', name: '6th Hour'},
+                    {start: '13:38', end: '14:18', name: '7th Hour'}
+                ]);
+            } else if (dayOfWeek === 0 || dayOfWeek === 6) {
+                displayElement.innerHTML = '<div>No School</div>';
+            } else {
+                displayElement.innerHTML = '<div>Normal</div>';
+                showSchedule([
+                    {start: '07:25', end: '08:10', name: '1st Hour'},
+                    {start: '08:16', end: '09:01', name: '2nd Hour'},
+                    {start: '09:07', end: '09:52', name: '3rd Hour'},
+                    {start: '09:58', end: '10:28', name: 'API'},
+                    {start: '10:34', end: '11:19', name: '4th Hour'},
+                    {start: '11:25', end: '12:38 or 12:13 for lunch', name: '5th Hour'},
+                    {start: '12:44', end: '13:28', name: '6th Hour'},
+                    {start: '13:34', end: '14:18', name: '7th Hour'}
+                ]);
+            }
+
+            function showSchedule(periods) {
+                var currentPeriod = null;
+
+                for (var i = 0; i < periods.length; i++) {
+                    var start = new Date();
+                    var end = new Date();
+                    var startParts = periods[i].start.split(':');
+                    var endParts = periods[i].end.split(':');
+                    start.setHours(parseInt(startParts[0], 10));
+                    start.setMinutes(parseInt(startParts[1], 10));
+                    end.setHours(parseInt(endParts[0], 10));
+                    end.setMinutes(parseInt(endParts[1], 10));
+
+                    if (currentDate >= start && currentDate <= end) {
+                        currentPeriod = periods[i];
+                        break;
+                    }
+                }
+
+                if (currentPeriod) {
+                    var endTime = formatTime(addMinutes(currentDate, (end.getHours() * 60 + end.getMinutes()) - (currentHour * 60 + currentMinute)));
+                    displayElement.innerHTML += '<div>' + currentPeriod.name + ' (Ends at ' + currentPeriod.end + ')</div>';
+
+                    var countdownElement = document.createElement('div');
+                    countdownElement.id = 'countdown';
+                    displayElement.appendChild(countdownElement);
+
+                    function updateCountdown() {
+                        var remainingTime = end - new Date();
+                        var minutes = Math.floor((remainingTime / 1000 / 60) % 60);
+                        var seconds = Math.floor((remainingTime / 1000) % 60);
+
+                        countdownElement.innerHTML = 'Time remaining: ' + minutes + 'm ' + seconds + 's';
+
+                        if (remainingTime <= 0) {
+                            clearInterval(countdownInterval);
+                            countdownElement.innerHTML = 'Period ended';
+                        }
+                    }
+
+                    updateCountdown();
+                    var countdownInterval = setInterval(updateCountdown, 1000);
+                } else {
+                    displayElement.innerHTML += '<div>School is not in session</div>';
+                }
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="display"></div>
+</body>
+
+</html>
