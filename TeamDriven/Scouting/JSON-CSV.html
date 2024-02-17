@@ -6,7 +6,7 @@
     <title>CSV Generator</title>
 </head>
 <body>
-    <textarea id="dataInput" rows="10" cols="50" placeholder="Enter data here..."></textarea><br>
+    <textarea id="dataInput" rows="10" cols="50" placeholder="Enter data here...">{ "Scout Name": "", "Match Number": "", "Team Number": "", "Preload": "No", "Driver Station": "0", "Starting Position": "0", "Leave": "No", "AutoNote": "0", "AutoAmp": "0", "AutoSpeaker": "0", "AutoAmpMissed": "0", "AutoSpeakerMissed": "0", "AutoAmpPercentage": "NaN", "AutoSpeakerPercentage": "NaN", "AutoComment": "", "TeleNote": "3", "TeleAmp": "0", "TeleSpeaker": "1", "TeleAmpMissed": "0", "TeleSpeakerMissed": "0", "TeleAmpPercentage": "NaN", "TeleSpeakerPercentage": "100.0", "TeleComment": "", "Stage": "1", "Harmony": "No", "Trap": "No", "StageComment": "" }</textarea><br>
     <button onclick="convertToCSV()">Convert to CSV</button>
 
     <script>
@@ -19,8 +19,7 @@
 
             try {
                 const data = JSON.parse(inputData);
-                const csvContent = Object.keys(data).map(key => `${key},`).join('') + '\n' +
-                                  Object.values(data).map(value => `${value},`).join('') + '\n';
+                const csvContent = Object.keys(data).map(key => `${key},"${data[key]}",`).join('') + '\n';
 
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement("a");
