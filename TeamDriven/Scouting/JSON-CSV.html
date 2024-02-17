@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON to Google Sheets</title>
+</head>
+<body>
+
+<h2>JSON to Google Sheets Converter</h2>
+
+<textarea id="jsonInput" rows="10" cols="50">[
+  {"Name": "John", "Age": 30, "City": "New York"},
+  {"Name": "Alice", "Age": 25, "City": "Los Angeles"},
+  {"Name": "Bob", "Age": 35, "City": "Chicago"}
+]</textarea><br>
+
+<button onclick="convertToCSV()">Convert to CSV</button><br><br>
+
+<textarea id="csvOutput" rows="10" cols="50" readonly></textarea>
+
+<script>
+function convertToCSV() {
+  var json = JSON.parse(document.getElementById("jsonInput").value);
+  var csv = jsonToCSV(json);
+  document.getElementById("csvOutput").value = csv;
+}
+
+function jsonToCSV(json) {
+  var header = Object.keys(json[0]).join(",");
+  var rows = json.map(obj => Object.values(obj).join(","));
+  return header + "\n" + rows.join("\n");
+}
+</script>
+
+</body>
+</html>
