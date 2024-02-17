@@ -13,7 +13,7 @@
         function convertToCSV() {
             const inputData = document.getElementById('dataInput').value.trim();
             if (!inputData) {
-                alert('Please enter data first!');
+                alert('So it works better with data.... Try again');
                 return;
             }
 
@@ -35,7 +35,7 @@
                 }
             } catch (error) {
                 console.error(error);
-                alert('Error converting data to CSV. Please check the input data and try again.');
+                alert('Error converting data to CSV. Wasnt my fault, Please check the input data and try again.');
             }
         }
     </script>
