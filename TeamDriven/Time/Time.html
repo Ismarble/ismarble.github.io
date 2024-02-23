@@ -11,46 +11,121 @@
 
 <label for="loginNumber">Login Number:</label>
 <input type="text" id="loginNumber" placeholder="Enter login number">
+<label for="userName">User Name:</label>
+<input type="text" id="userName" placeholder="Enter user name">
 <button onclick="logIn()">Log In</button>
 <button onclick="logOut()">Log Out</button>
+<br>
+<label for="lookupLogin">Lookup Login by User Name:</label>
+<input type="text" id="lookupLogin" placeholder="Enter user name">
+<button onclick="lookupLogin()">Lookup</button>
+<br>
+<label for="lookupUser">Lookup User Name by Login:</label>
+<input type="text" id="lookupUser" placeholder="Enter login number">
+<button onclick="lookupUser()">Lookup</button>
+<br>
+<button onclick="addUser()">Add User</button>
+<br><br>
+<label for="fileInput">Upload File:</label>
+<input type="file" id="fileInput" accept=".txt" onchange="uploadFile()">
+<br><br>
 
 <script>
+var userMap = {};
+var timeData = [];
+
 function logIn() {
     var loginNumber = document.getElementById("loginNumber").value;
-    logTime(loginNumber, "Logged In");
+    var userName = document.getElementById("userName").value;
+    userMap[loginNumber] = userName;
+    var action = "Logged In";
+    logTime(loginNumber, userName, action);
+    saveData();
 }
 
 function logOut() {
     var loginNumber = document.getElementById("loginNumber").value;
-    logTime(loginNumber, "Logged Out");
+    var userName = userMap[loginNumber];
+    var action = "Logged Out";
+    logTime(loginNumber, userName, action);
+    saveData();
 }
 
-function logTime(loginNumber, action) {
-    // Format data to be logged
-    var logData = {
+function logTime(loginNumber, userName, action) {
+    var timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    var logEntry = {
+        timestamp: timestamp,
         loginNumber: loginNumber,
+        userName: userName,
         action: action
     };
-
-    // Make a POST request to the server
-    fetch('http://localhost:5000/log-time', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(logData)
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log("Time logged successfully.");
-        } else {
-            console.error("Failed to log time.");
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+    timeData.push(logEntry);
 }
+
+function lookupLogin() {
+    var userName = document.getElementById("lookupLogin").value;
+    var loginNumber = Object.keys(userMap).find(key => userMap[key] === userName);
+    if (loginNumber) {
+        alert("Login Number: " + loginNumber);
+    } else {
+        alert("User not found.");
+    }
+}
+
+function lookupUser() {
+    var loginNumber = document.getElementById("lookupUser").value;
+    var userName = userMap[loginNumber];
+    if (userName) {
+        alert("User Name: " + userName);
+    } else {
+        alert("Login number not found.");
+    }
+}
+
+function addUser() {
+    var loginNumber = document.getElementById("loginNumber").value;
+    var userName = document.getElementById("userName").value;
+    if (loginNumber && userName) {
+        userMap[loginNumber] = userName;
+        alert("User added successfully.");
+    } else {
+        alert("Please enter both login number and user name.");
+    }
+}
+
+function uploadFile() {
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function() {
+        var fileContents = reader.result;
+        // You can parse the file contents if needed
+        // For now, just alert the contents
+        alert(fileContents);
+    };
+
+    reader.readAsText(file);
+}
+
+function saveData() {
+    localStorage.setItem('userMap', JSON.stringify(userMap));
+    localStorage.setItem('timeData', JSON.stringify(timeData));
+}
+
+function loadData() {
+    var storedUserMap = localStorage.getItem('userMap');
+    var storedTimeData = localStorage.getItem('timeData');
+    if (storedUserMap) {
+        userMap = JSON.parse(storedUserMap);
+    }
+    if (storedTimeData) {
+        timeData = JSON.parse(storedTimeData);
+    }
+}
+
+// Load data when the page is loaded
+loadData();
 </script>
 
 </body>
