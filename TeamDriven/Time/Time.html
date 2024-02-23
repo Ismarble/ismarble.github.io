@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Time Tracking</title>
+</head>
+<body>
+
+<h1>User Time Tracking</h1>
+
+<label for="loginNumber">Login Number:</label>
+<input type="text" id="loginNumber" placeholder="Enter login number">
+<button onclick="logIn()">Log In</button>
+<button onclick="logOut()">Log Out</button>
+
+<script>
+function logIn() {
+    var loginNumber = document.getElementById("loginNumber").value;
+    logTime(loginNumber, "Logged In");
+}
+
+function logOut() {
+    var loginNumber = document.getElementById("loginNumber").value;
+    logTime(loginNumber, "Logged Out");
+}
+
+function logTime(loginNumber, action) {
+    // Format data to be logged
+    var logData = {
+        loginNumber: loginNumber,
+        action: action
+    };
+
+    // Make a POST request to the server
+    fetch('http://localhost:5000/log-time', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(logData)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Time logged successfully.");
+        } else {
+            console.error("Failed to log time.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+
+</body>
+</html>
