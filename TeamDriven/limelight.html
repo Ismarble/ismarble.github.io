@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Website Title</title>
+<title>Team Driven Limelight</title>
 <style>
 </style>
 </head>
@@ -11,23 +11,22 @@
 
 <h2>Intake</h2>
 <iframe id="intakeFrame" src="http://limelight-intake.local:5800/" height="40%" width="100%"></iframe>
+<button id="openIntakeStreamButton">Open Intake Stream</button>
+
 <h2>Shooter</h2>
 <iframe id="shooterFrame" src="http://limelight-shooter.local:5800/" height="40%" width="100%"></iframe>
+<button id="openShooterStreamButton">Open Shooter Stream</button>
+
 <p>You Need To Be Connected To The Team Driven Radio Before This Site Will Work. Load The Site Then Connect And Press Refresh (or download the site and run locally)</p>
 
-<!-- Add a button next to the header -->
-<button id="openStreamButton">Open Stream</button>
-
 <script>
-// JavaScript code to open the stream URLs in new tabs when the button is clicked
-document.getElementById("openStreamButton").addEventListener("click", function() {
-    // Open the stream URLs in new tabs
+document.getElementById("openIntakeStreamButton").addEventListener("click", function() {
     var intakeStreamUrl = document.getElementById("intakeFrame").src;
-    var shooterStreamUrl = document.getElementById("shooterFrame").src;
-    
-
     window.open(intakeStreamUrl, "_blank");
+});
 
+document.getElementById("openShooterStreamButton").addEventListener("click", function() {
+    var shooterStreamUrl = document.getElementById("shooterFrame").src;
     window.open(shooterStreamUrl, "_blank");
 });
 </script>
