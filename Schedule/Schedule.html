@@ -159,7 +159,7 @@
                         var seconds = Math.floor((remainingTime / 1000) % 60);
                         var milliseconds = Math.floor(remainingTime % 1000);
 
-                        countdownElement.innerHTML = 'Time remaining: ' + minutes + 'm ' + seconds + 's ' + milliseconds + 'ms';
+                        countdownElement.innerHTML = 'Time remaining: ' + minutes + 'm ' + seconds + 's ';
 
                         if (remainingTime <= 0) {
                             clearInterval(countdownInterval);
